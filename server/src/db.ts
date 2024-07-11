@@ -1,6 +1,6 @@
 import mysql from "mysql2/promise";
-import { config } from "dotenv";
-config();
+import { config as loadEnvFile } from "dotenv";
+loadEnvFile();
 
 interface DBConfig {
   host: string;
