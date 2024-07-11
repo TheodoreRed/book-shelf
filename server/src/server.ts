@@ -2,14 +2,44 @@ import express from "express";
 import path from "path";
 import logger from "./middleware/logger";
 import db from "./db";
+import { setupGoogleStrategy } from "./config/passportSetup";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import passport from "passport";
+import AuthRouter from "./routes/AuthRouter";
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+setupGoogleStrategy();
+
+app.use(cookieParser());
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "your_secret_key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === "production" },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173",
+//     credentials: true,
+//   })
+// );
 
 app.use(logger);
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "../../app/dist")));
+
+app.use("/auth", AuthRouter);
 
 app.post("/api/insert-test", async (req, res) => {
   try {

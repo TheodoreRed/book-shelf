@@ -37,7 +37,7 @@ AuthRouter.post("/logout", (req, res) => {
 
 AuthRouter.get(
   "/google",
-  passport.authenticate("google", { scope: ["profile"] })
+  passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 AuthRouter.get(
@@ -57,7 +57,11 @@ AuthRouter.get(
       maxAge: 3600000,
     });
 
-    res.redirect(`http://localhost:5173/dashboard`);
+    res.redirect(
+      process.env.NODE_ENV === "production"
+        ? `http://localhost:3000`
+        : `http://localhost:5173`
+    );
   }
 );
 
