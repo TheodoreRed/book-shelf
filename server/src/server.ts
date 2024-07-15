@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import passport from "passport";
 import AuthRouter from "./routes/AuthRouter";
+import bookRouter from "./routes/BookRouter";
+import cors from "cors";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -27,12 +29,12 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.use(
-//   cors({
-//     origin: "http://localhost:5173",
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.use(logger);
 app.use(express.json());
@@ -40,6 +42,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "../../app/dist")));
 
 app.use("/auth", AuthRouter);
+app.use("/api", bookRouter);
 
 app.post("/api/insert-test", async (req, res) => {
   try {
