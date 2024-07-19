@@ -1,10 +1,11 @@
 import express from "express";
 import GoogleBook from "../models/GoogleBook";
 import db from "../db";
+import { getAllUserBooks, getBookById } from "../controllers/booksController";
 
 const bookRouter = express.Router();
 
-bookRouter.post("/book/:userId", async (req, res) => {
+bookRouter.post("/books/:userId", async (req, res) => {
   try {
     const book: GoogleBook = req.body;
     const userId = req.params.userId;
@@ -66,5 +67,8 @@ bookRouter.post("/book/:userId", async (req, res) => {
     res.status(500).json({ message: "Error inserting data into database" });
   }
 });
+
+bookRouter.get("/books/user/:userId", getAllUserBooks);
+bookRouter.get("/books/:bookId", getBookById);
 
 export default bookRouter;

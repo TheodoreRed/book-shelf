@@ -7,10 +7,14 @@ import {
 } from "react";
 import { User } from "../models/User";
 import { getAuthenticatedUser } from "../services/authApi";
+import { getUserBooks } from "../services/bookApi";
+import Book from "../models/Book";
 
 interface UserContextType {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  books: Book[] | null;
+  setBooks: React.Dispatch<React.SetStateAction<Book[] | null>>;
 }
 
 interface AuthProviderProps {
@@ -27,18 +31,25 @@ export const useUser = () => {
 
 export const UserProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [books, setBooks] = useState<Book[] | null>(null);
 
   useEffect(() => {
     const initializeUser = async () => {
       const userData = await getAuthenticatedUser();
       setUser(userData);
+      if (userData && userData.id) {
+        const userBooks = await getUserBooks(userData.id);
+        if (userBooks) {
+          setBooks(userBooks);
+        }
+      }
     };
 
     initializeUser();
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, books, setBooks }}>
       {children}
     </UserContext.Provider>
   );

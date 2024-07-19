@@ -1,17 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home/Home";
 import LoginPage from "./pages/Login/Login";
 import MyBooks from "./pages/MyBooks/MyBooks";
-import Favorites from "./pages/Favorites/Favorites";
+import Landing from "./pages/Landing/Landing";
+import BookSearch from "./pages/BookSearch/BookSearch";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/my-books" element={<MyBooks />} />
-        <Route path="/favorites" element={<Favorites />} />
+        <Route path="/dashboard" element={<MyBooks />} />
+        <Route path="/search" element={<BookSearch />} />
       </Routes>
     </Router>
   );

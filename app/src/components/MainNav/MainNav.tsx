@@ -1,14 +1,19 @@
-import { faBook } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 import { getAuthenticatedUser, logout } from "../../services/authApi";
 import { useEffect, useState } from "react";
+import { getUserBooks } from "../../services/bookApi";
 
-const Header = () => {
-  const { user, setUser } = useUser();
+const MainNav = () => {
+  const { setUser, setBooks } = useUser();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
+
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:3000/auth/google";
+  };
 
   useEffect(() => {
     const initializeAuthentication = async () => {
@@ -16,13 +21,18 @@ const Header = () => {
       try {
         const userData = await getAuthenticatedUser();
         setUser(userData);
-        console.log(userData);
         if (!userData) {
-          navigate("/login");
+          handleGoogleLogin();
+        }
+        if (userData && userData.id) {
+          const userBooks = await getUserBooks(userData.id);
+          if (userBooks) {
+            setBooks(userBooks);
+          }
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
-        navigate("/login");
+        handleGoogleLogin();
       } finally {
         setLoading(false);
       }
@@ -30,10 +40,6 @@ const Header = () => {
 
     initializeAuthentication();
   }, [navigate, setUser]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   const handleLogout = async () => {
     try {
@@ -47,7 +53,7 @@ const Header = () => {
 
   const listStyles = "text-blue-600 text-xl hover:bg-gray-200 pt-5 pb-5 pl-5";
   return (
-    <header className="flex flex-col h-screen bg-gray-100 shadow-xl w-fit">
+    <header className="fixed top-0 left-0 flex flex-col h-screen bg-gray-100 shadow-xl w-fit">
       <div className="p-8 border-b border-gray-300">
         <div className="flex items-center space-x-4">
           <FontAwesomeIcon icon={faBook} className="text-4xl text-blue-600" />
@@ -57,7 +63,7 @@ const Header = () => {
       <nav>
         <ul className="flex flex-col">
           <NavLink
-            to="/my-books"
+            to="/dashboard"
             className={({ isActive }) =>
               isActive ? `bg-gray-200 ${listStyles}` : `${listStyles}`
             }
@@ -65,18 +71,31 @@ const Header = () => {
             <li>My Books</li>
           </NavLink>
           <NavLink
-            to="/favorites"
+            to="/search"
             className={({ isActive }) =>
               isActive ? `bg-gray-200 ${listStyles}` : `${listStyles}`
             }
           >
-            <li>Favorites</li>
+            <li className="flex flex-row items-center gap-3">
+              <p>Search</p>
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                className="scale-x-[-1]"
+              />
+            </li>
           </NavLink>
         </ul>
-        <button onClick={handleLogout}>Logout</button>
+        <div className="flex flex-col items-center mt-10">
+          <button
+            className="px-4 py-2 text-black rounded-md bg-gradient-to-b from-blue-400 to-blue-200 hover:from-blue-500 hover:to-blue-300"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        </div>
       </nav>
     </header>
   );
 };
 
-export default Header;
+export default MainNav;

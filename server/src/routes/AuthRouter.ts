@@ -60,7 +60,7 @@ AuthRouter.get(
     res.redirect(
       process.env.NODE_ENV === "production"
         ? `http://localhost:3000`
-        : `http://localhost:5173`
+        : `http://localhost:5173/dashboard`
     );
   }
 );

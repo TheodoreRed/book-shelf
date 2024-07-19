@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const Home = () => {
+const Landing = () => {
   return (
     <div className="min-h-screen bg-yellow-900">
       <header>
@@ -12,9 +12,9 @@ const Home = () => {
           </Link>
         </nav>
       </header>
-      <h1>Home works</h1>
+      <h1>Landing works</h1>
     </div>
   );
 };
 
-export default Home;
+export default Landing;
