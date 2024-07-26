@@ -1,15 +1,16 @@
 import { FormEvent, useState } from "react";
 import DashboardHeader from "../../components/DashboardHeader/DashboardHeader";
 import MainNav from "../../components/MainNav/MainNav";
-import GoogleBook from "../../models/GoogleBook";
 import { getBooksBySearch } from "../../services/googleBookApi";
-import { addBook } from "../../services/bookApi";
 import { useUser } from "../../context/UserContext";
+import { useBookSearch } from "../../context/SearchContext";
+import GoogleBookCard from "../../components/GoogleBookCard/GoogleBookCard";
+import "./BookSearch.css";
 
 const BookSearch = () => {
   const { user } = useUser();
+  const { bookSearch, setBookSearch } = useBookSearch();
   const [searchTerm, setSearchTerm] = useState("");
-  const [books, setBooks] = useState<GoogleBook[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,10 +22,9 @@ const BookSearch = () => {
     setIsLoading(true);
 
     try {
-      // Assuming getBooksBySearch is an async function that fetches books data
       const results = await getBooksBySearch(searchTerm);
       if (results) {
-        setBooks(results);
+        setBookSearch(results);
       }
     } catch (error) {
       console.error("Failed to fetch books:", error);
@@ -41,17 +41,25 @@ const BookSearch = () => {
       <MainNav />
       <DashboardHeader />
       <div className="flex flex-col items-center">
-        <div className="ml-64 ">
+        {bookSearch && (
+          <button
+            onClick={() => setBookSearch([])}
+            className="absolute z-10 px-5 py-2 text-white bg-gray-700 rounded-md right-24 hover:bg-gray-500 top-16"
+          >
+            Clear
+          </button>
+        )}
+        <div className="ml-64">
           <form
             onSubmit={handleSubmit}
-            className="relative flex flex-row items-center gap-3 right-20"
+            className="relative flex flex-row items-center justify-center gap-3 right-20"
           >
             <input
               type="text"
               placeholder="Enter book title"
               value={searchTerm}
               onChange={handleInputChange}
-              className="w-full px-5 py-2 mt-5 border border-black"
+              className="w-1/3 px-5 py-2 mt-5 border border-black rounded-md min-w-max"
             />
             <button
               type="submit"
@@ -64,14 +72,9 @@ const BookSearch = () => {
           {isLoading ? (
             <p>Loading...</p>
           ) : (
-            <ul>
-              {books?.map((book, index) => (
-                <li key={index}>
-                  {book.volumeInfo.title} - {book.volumeInfo.authors}
-                  <button onClick={() => addBook(book, user?.id!)}>
-                    Add to Library
-                  </button>
-                </li>
+            <ul className="mt-10 search-ul">
+              {bookSearch?.map((book) => (
+                <GoogleBookCard key={book.id} googleBook={book} />
               ))}
             </ul>
           )}

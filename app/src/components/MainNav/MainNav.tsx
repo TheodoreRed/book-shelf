@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { getUserBooks } from "../../services/bookApi";
 
 const MainNav = () => {
-  const { setUser, setBooks } = useUser();
+  const { setUser, books, setBooks } = useUser();
   const navigate = useNavigate();
   const [_loading, setLoading] = useState(true);
 
@@ -57,7 +57,12 @@ const MainNav = () => {
       <div className="p-8 border-b border-gray-300">
         <div className="flex items-center space-x-4">
           <FontAwesomeIcon icon={faBook} className="text-4xl text-blue-600" />
-          <h2 className="text-2xl font-bold text-gray-700">Book Shelf</h2>
+          <h2
+            onClick={() => navigate("/dashboard")}
+            className="text-2xl font-bold text-gray-700 cursor-pointer"
+          >
+            Book Shelf
+          </h2>
         </div>
       </div>
       <nav>
@@ -68,7 +73,7 @@ const MainNav = () => {
               isActive ? `bg-gray-200 ${listStyles}` : `${listStyles}`
             }
           >
-            <li>My Books</li>
+            <li>My Books {`(${books?.length})`}</li>
           </NavLink>
           <NavLink
             to="/search"

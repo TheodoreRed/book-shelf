@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"cd app && npm run dev\" \"cd server && npm run dev\""
+    "dev": "concurrently \"cd app && npm run dev\" \"cd server && npm run dev\"",
+    "build": "concurrently \"cd app && npm run build\" \"cd server && npm run build\""
   },
   "keywords": [],
   "author": "",

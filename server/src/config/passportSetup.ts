@@ -3,6 +3,8 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { User } from "../models/User";
 import db from "../db";
 import { RowDataPacket } from "mysql2";
+import { config as loadEnvFile } from "dotenv";
+loadEnvFile();
 
 export const setupGoogleStrategy = () => {
   passport.use(

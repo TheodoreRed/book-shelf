@@ -9,6 +9,8 @@ import passport from "passport";
 import AuthRouter from "./routes/AuthRouter";
 import bookRouter from "./routes/BookRouter";
 import cors from "cors";
+import { config as loadEnvFile } from "dotenv";
+loadEnvFile();
 
 const app = express();
 const port = process.env.PORT || 3000;

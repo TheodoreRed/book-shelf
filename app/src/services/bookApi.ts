@@ -27,7 +27,27 @@ export const getUserBooks = async (userId: number) => {
 export const getBookById = async (bookId: string) => {
   try {
     const result = await axios.get(`${baseUrl}/api/books/${bookId}`);
-    return result.data as GoogleBook;
+    return result.data as Book;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const deleteBookById = async (userId: number, bookId: string) => {
+  try {
+    const response = await axios.delete(
+      `${baseUrl}/api/books/${userId}/${bookId}`
+    );
+    console.log(response);
+    if (response.status === 200) {
+      window.location.href = "/dashboard";
+    } else {
+      console.error(
+        "Failed to delete book:",
+        response.status,
+        response.statusText
+      );
+    }
   } catch (error) {
     console.error(error);
   }

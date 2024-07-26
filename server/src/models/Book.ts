@@ -13,6 +13,4 @@ export default interface Book {
   maturityRating: string;
   smallThumbnail: string;
   thumbnail: string;
-  user_id: number;
-  book_id: string;
 }

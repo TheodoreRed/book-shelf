@@ -1,0 +1,16 @@
+.GoogleBookCard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 30%;
+}
+
+.GoogleBookCard .book-content h2 {
+  font-weight: bold;
+}
+
+.GoogleBookCard .add-btn-container {
+  display: flex;
+  justify-content: center;
+}
